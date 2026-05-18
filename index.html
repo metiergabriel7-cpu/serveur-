@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CraftHost — Hébergement Minecraft Gratuit</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#00ff88;--green2:#00cc66;--dark:#0a0f0a;--dark2:#0f1a0f;--dark3:#162016;
+  --card:#1a2a1a;--card2:#1f321f;--border:#2a4a2a;--text:#e8f5e8;--muted:#7aaa7a;
+  --red:#ff4444;--orange:#ff9900;--blue:#4488ff;--purple:#aa44ff;
+  --gold:#ffd700;--diamond:#44ffff
+}
+body{background:var(--dark);color:var(--text);font-family:'Exo 2',sans-serif;overflow-x:hidden}
+/* PIXEL BACKGROUND */
+body::before{content:'';position:fixed;inset:0;background-image:
+  radial-gradient(circle at 20% 30%, rgba(0,255,136,0.03) 0%, transparent 60%),
+  radial-gradient(circle at 80% 70%, rgba(68,255,255,0.02) 0%, transparent 60%);
+  pointer-events:none;z-index:0}
+
+/* NAV */
+nav{background:rgba(10,15,10,0.95);border-bottom:2px solid var(--green);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.logo{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--green);text-shadow:0 0 20px var(--green);letter-spacing:2px;display:flex;align-items:center;gap:8px}
+.logo-block{width:20px;height:20px;background:var(--green);display:inline-block;image-rendering:pixelated;box-shadow:4px 4px 0 var(--green2),-4px 0 0 var(--green2)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s;text-transform:uppercase;letter-spacing:1px}
+.nav-links a:hover{color:var(--green)}
+.btn-nav{background:var(--green);color:var(--dark);padding:.5rem 1.2rem;border-radius:4px;font-weight:700;font-family:'Orbitron',monospace;font-size:.8rem;cursor:pointer;border:none;transition:all .2s}
+.btn-nav:hover{background:var(--green2);transform:translateY(-1px)}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative}
+.hero h1{font-family:'Orbitron',monospace;font-size:clamp(2rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem}
+.hero h1 span{color:var(--green);text-shadow:0 0 30px rgba(0,255,136,0.4)}
+.hero p{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.6}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--green);color:var(--dark);padding:.9rem 2.5rem;border-radius:4px;font-family:'Orbitron',monospace;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all .2s;letter-spacing:1px}
+.btn-primary:hover{background:var(--green2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,255,136,0.3)}
+.btn-secondary{background:transparent;color:var(--green);padding:.9rem 2.5rem;border-radius:4px;font-family:'Orbitron',monospace;font-weight:700;font-size:1rem;border:2px solid var(--green);cursor:pointer;transition:all .2s;letter-spacing:1px}
+.btn-secondary:hover{background:rgba(0,255,136,0.1);transform:translateY(-2px)}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--dark2)}
+.stat-item{padding:1.5rem;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--green)}
+.stat-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.3rem}
+
+/* SECTIONS */
+.section{padding:4rem 2rem;max-width:1200px;margin:0 auto}
+.section-title{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;margin-bottom:.5rem;color:var(--text)}
+.section-title span{color:var(--green)}
+.section-sub{color:var(--muted);margin-bottom:2.5rem;font-size:1rem}
+
+/* TABS */
+.tabs{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.tab{padding:.6rem 1.4rem;border-radius:4px;background:var(--card);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.9rem;font-weight:600;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+.tab.active{background:var(--green);color:var(--dark);border-color:var(--green)}
+.tab:hover:not(.active){border-color:var(--green);color:var(--green)}
+
+/* TAB CONTENT */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* MODPACK GRID */
+.modpack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+.modpack-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all .3s;cursor:pointer;position:relative}
+.modpack-card:hover{border-color:var(--green);transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,255,136,0.15)}
+.modpack-banner{height:100px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.modpack-info{padding:1rem}
+.modpack-name{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.3rem}
+.modpack-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:.8rem}
+.modpack-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.tag{padding:.2rem .6rem;border-radius:3px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.tag-green{background:rgba(0,255,136,0.15);color:var(--green);border:1px solid rgba(0,255,136,0.3)}
+.tag-blue{background:rgba(68,136,255,0.15);color:var(--blue);border:1px solid rgba(68,136,255,0.3)}
+.tag-orange{background:rgba(255,153,0,0.15);color:var(--orange);border:1px solid rgba(255,153,0,0.3)}
+.tag-purple{background:rgba(170,68,255,0.15);color:var(--purple);border:1px solid rgba(170,68,255,0.3)}
+.tag-diamond{background:rgba(68,255,255,0.15);color:var(--diamond);border:1px solid rgba(68,255,255,0.3)}
+.modpack-footer{display:flex;align-items:center;justify-content:space-between}
+.modpack-downloads{font-size:.78rem;color:var(--muted)}
+.btn-install{background:var(--green);color:var(--dark);border:none;padding:.4rem 1rem;border-radius:3px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Orbitron',monospace;letter-spacing:.5px;transition:all .2s}
+.btn-install:hover{background:var(--green2)}
+.badge-new{position:absolute;top:8px;right:8px;background:var(--red);color:white;font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:3px;font-family:'Orbitron',monospace}
+.badge-hot{position:absolute;top:8px;right:8px;background:var(--orange);color:var(--dark);font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:3px;font-family:'Orbitron',monospace}
+
+/* CLIENT GRID */
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.client-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem;text-align:center;transition:all .3s;cursor:pointer}
+.client-card:hover{border-color:var(--green);transform:translateY(-2px)}
+.client-icon{font-size:2.5rem;margin-bottom:.8rem}
+.client-name{font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+.client-desc{font-size:.78rem;color:var(--muted);line-height:1.4;margin-bottom:.8rem}
+.client-features{list-style:none;text-align:left;margin-bottom:.8rem}
+.client-features li{font-size:.75rem;color:var(--muted);padding:.2rem 0;display:flex;align-items:center;gap:.4rem}
+.client-features li::before{content:'▸';color:var(--green);font-size:.6rem}
+
+/* DASHBOARD */
+.dashboard{display:grid;grid-template-columns:280px 1fr;gap:1.5rem}
+@media(max-width:768px){.dashboard{grid-template-columns:1fr}}
+.server-sidebar{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+.server-list{list-style:none;margin:1rem 0}
+.server-list li{padding:.7rem;border-radius:4px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.6rem;font-size:.9rem;margin-bottom:.3rem}
+.server-list li:hover,.server-list li.active{background:rgba(0,255,136,0.1);color:var(--green)}
+.server-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.server-dot.offline{background:var(--red)}
+.server-dot.loading{background:var(--orange)}
+.server-panel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem}
+.server-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:gap}
+.server-name-big{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900}
+.status-badge{padding:.3rem .8rem;border-radius:3px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;font-family:'Orbitron',monospace}
+.status-online{background:rgba(0,255,136,0.2);color:var(--green);border:1px solid var(--green)}
+.status-offline{background:rgba(255,68,68,0.2);color:var(--red);border:1px solid var(--red)}
+.server-grid-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:1rem;text-align:center}
+.stat-card .num{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:700;color:var(--green)}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:.2rem}
+
+/* CONSOLE */
+.console{background:#060c06;border:1px solid var(--border);border-radius:6px;height:200px;overflow-y:auto;padding:1rem;font-family:'Courier New',monospace;font-size:.8rem;margin-bottom:1rem}
+.console-line{margin-bottom:.3rem;line-height:1.4}
+.console-line.info{color:#88ff88}
+.console-line.warn{color:var(--orange)}
+.console-line.error{color:var(--red)}
+.console-line.chat{color:var(--diamond)}
+.console-line.join{color:var(--green)}
+.console-line.system{color:var(--purple)}
+.console-input-row{display:flex;gap:.5rem}
+.console-input{flex:1;background:#060c06;border:1px solid var(--border);color:var(--green);padding:.5rem 1rem;border-radius:4px;font-family:'Courier New',monospace;font-size:.85rem}
+.console-input:focus{outline:none;border-color:var(--green)}
+.btn-send{background:var(--green);color:var(--dark);border:none;padding:.5rem 1.2rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.8rem;font-weight:700;cursor:pointer}
+
+/* SERVER CONTROLS */
+.server-controls{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.btn-ctrl{padding:.5rem 1rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.btn-start{background:var(--green);color:var(--dark)}
+.btn-stop{background:var(--red);color:white}
+.btn-restart{background:var(--orange);color:var(--dark)}
+.btn-backup{background:var(--blue);color:white}
+.btn-ctrl:hover{opacity:.85;transform:translateY(-1px)}
+
+/* MODS SECTION */
+.mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.mod-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1rem;display:flex;align-items:flex-start;gap:.8rem;transition:all .2s;cursor:pointer}
+.mod-item:hover{border-color:var(--green)}
+.mod-icon{width:44px;height:44px;border-radius:6px;background:var(--dark2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.mod-info .mod-name{font-weight:600;font-size:.9rem;margin-bottom:.2rem}
+.mod-info .mod-author{font-size:.75rem;color:var(--muted);margin-bottom:.4rem}
+.mod-info .mod-ver{font-size:.72rem;color:var(--green);font-family:'Orbitron',monospace}
+.toggle-switch{position:relative;width:40px;height:22px;flex-shrink:0;margin-left:auto}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:11px;transition:.3s;cursor:pointer}
+.toggle-slider:before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:var(--muted);border-radius:50%;transition:.3s}
+input:checked+.toggle-slider{background:var(--green)}
+input:checked+.toggle-slider:before{transform:translateX(18px);background:var(--dark)}
+
+/* PLAYERS TABLE */
+.players-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.players-table th{text-align:left;padding:.7rem 1rem;background:var(--dark2);color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600;border-bottom:1px solid var(--border)}
+.players-table td{padding:.7rem 1rem;border-bottom:1px solid rgba(42,74,42,0.4)}
+.players-table tr:hover td{background:rgba(0,255,136,0.03)}
+.player-avatar{width:24px;height:24px;border-radius:2px;image-rendering:pixelated}
+.rank-badge{padding:.2rem .5rem;border-radius:3px;font-size:.7rem;font-weight:700;font-family:'Orbitron',monospace}
+
+/* WORLD SETTINGS */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem}
+.setting-group{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+.setting-group h3{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;margin-bottom:1rem;color:var(--green);text-transform:uppercase;letter-spacing:1px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(42,74,42,0.4);gap:1rem}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:.85rem;color:var(--text)}
+.setting-label small{display:block;font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.setting-select{background:var(--dark2);border:1px solid var(--border);color:var(--text);padding:.3rem .6rem;border-radius:4px;font-family:'Exo 2',sans-serif;font-size:.8rem;cursor:pointer}
+.setting-select:focus{outline:none;border-color:var(--green)}
+.setting-input{background:var(--dark2);border:1px solid var(--border);color:var(--text);padding:.3rem .6rem;border-radius:4px;font-family:'Exo 2',sans-serif;font-size:.8rem;width:80px;text-align:center}
+.setting-input:focus{outline:none;border-color:var(--green)}
+
+/* PLUGIN SEARCH */
+.search-bar{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.search-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.7rem 1rem;border-radius:4px;font-family:'Exo 2',sans-serif;font-size:.9rem}
+.search-input:focus{outline:none;border-color:var(--green)}
+.search-btn{background:var(--green);color:var(--dark);border:none;padding:.7rem 1.5rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;cursor:pointer}
+
+/* PROGRESS BAR */
+.progress-bar{background:var(--dark2);border-radius:4px;height:8px;overflow:hidden;margin:.5rem 0}
+.progress-fill{height:100%;border-radius:4px;background:var(--green);transition:width .3s}
+.progress-fill.warn{background:var(--orange)}
+.progress-fill.danger{background:var(--red)}
+
+/* FILE MANAGER */
+.file-manager{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.file-toolbar{background:var(--dark2);padding:.7rem 1rem;display:flex;gap:.5rem;align-items:center;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.file-path{flex:1;font-family:'Courier New',monospace;font-size:.82rem;color:var(--green);padding:.3rem .6rem;background:var(--dark);border:1px solid var(--border);border-radius:3px}
+.file-list{max-height:300px;overflow-y:auto}
+.file-item{display:flex;align-items:center;gap.8rem;padding:.6rem 1rem;border-bottom:1px solid rgba(42,74,42,0.3);cursor:pointer;transition:background .2s;gap:.8rem}
+.file-item:hover{background:rgba(0,255,136,0.05)}
+.file-item .fi-icon{font-size:1rem;width:24px;text-align:center}
+.file-item .fi-name{font-size:.85rem;flex:1}
+.file-item .fi-size{font-size:.75rem;color:var(--muted);font-family:'Orbitron',monospace}
+
+/* BACKUP SECTION */
+.backup-list{list-style:none}
+.backup-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.backup-name{font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700}
+.backup-date{font-size:.78rem;color:var(--muted)}
+.backup-size{font-size:.78rem;color:var(--green);font-family:'Orbitron',monospace}
+.backup-actions{display:flex;gap:.4rem}
+.btn-sm{padding:.3rem .7rem;border-radius:3px;font-size:.75rem;font-weight:700;border:none;cursor:pointer;font-family:'Orbitron',monospace}
+.btn-restore{background:var(--blue);color:white}
+.btn-delete{background:var(--red);color:white}
+.btn-dl{background:var(--green);color:var(--dark)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--dark2);border:1px solid var(--green);border-radius:8px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--green)}
+.modal-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--red)}
+.modal-body{padding:1.5rem}
+.form-group{margin-bottom:1.2rem}
+.form-label{display:block;font-size:.85rem;font-weight:600;margin-bottom:.4rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.7rem 1rem;border-radius:4px;font-family:'Exo 2',sans-serif;font-size:.9rem;transition:border-color .2s}
+.form-input:focus{outline:none;border-color:var(--green)}
+.form-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.7rem 1rem;border-radius:4px;font-family:'Exo 2',sans-serif;font-size:.9rem;cursor:pointer}
+.form-select:focus{outline:none;border-color:var(--green)}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.5rem;justify-content:flex-end}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:2rem;right:2rem;background:var(--dark2);border:1px solid var(--green);border-radius:6px;padding:.9rem 1.4rem;font-size:.88rem;z-index:300;transform:translateX(120%);transition:transform .3s;display:flex;align-items:center;gap:.6rem;max-width:320px}
+.notif.show{transform:translateX(0)}
+.notif-icon{color:var(--green);font-size:1.1rem}
+
+/* FOOTER */
+footer{background:var(--dark2);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:.85rem;margin-top:4rem}
+.footer-logo{font-family:'Orbitron',monospace;font-size:1.2rem;color:var(--green);margin-bottom:.5rem;font-weight:900}
+footer p{margin-top:.5rem;font-size:.78rem}
+
+/* CHART */
+.resource-charts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.resource-card{background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:1rem}
+.resource-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem}
+.resource-val{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:var(--green);margin-bottom:.4rem}
+
+/* NETWORK INFO */
+.network-box{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:1rem}
+.network-ip{font-family:'Orbitron',monospace;font-size:1.3rem;color:var(--diamond);word-break:break-all}
+.copy-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:.3rem .7rem;border-radius:3px;font-size:.75rem;cursor:pointer;margin-left:.5rem;transition:all .2s}
+.copy-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* MARKETPLACE */
+.market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem}
+.market-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .3s}
+.market-card:hover{border-color:var(--green);transform:translateY(-2px)}
+.market-banner{height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--dark2)}
+.market-info{padding:1rem}
+.market-name{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;margin-bottom:.3rem}
+.market-desc{font-size:.78rem;color:var(--muted);line-height:1.4;margin-bottom:.8rem}
+.market-footer{display:flex;align-items:center;justify-content:space-between}
+.market-price{font-family:'Orbitron',monospace;font-size:.9rem;font-weight:700;color:var(--gold)}
+.market-price.free{color:var(--green)}
+
+/* ALERT */
+.alert{border-radius:6px;padding:.9rem 1rem;margin-bottom:1rem;font-size:.88rem;display:flex;align-items:center;gap:.6rem}
+.alert-success{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green)}
+.alert-warn{background:rgba(255,153,0,0.1);border:1px solid rgba(255,153,0,0.3);color:var(--orange)}
+.alert-info{background:rgba(68,136,255,0.1);border:1px solid rgba(68,136,255,0.3);color:var(--blue)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  nav .nav-links{display:none}
+  .hero h1{font-size:1.8rem}
+  .server-grid-stats{grid-template-columns:1fr 1fr}
+}
+
+/* ANIMATIONS */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cursor::after{content:'_';animation:blink 1s infinite;color:var(--green)}
+
+/* PLAYERS ONLINE TICKER */
+.ticker{background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.5rem 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:scroll 30s linear infinite}
+@keyframes scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+.ticker-item{display:inline-block;margin:0 2rem;font-size:.82rem;color:var(--muted)}
+.ticker-item .pname{color:var(--green);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-block"></div>
+    CRAFTHOST
+  </div>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')">Accueil</a>
+    <a href="#" onclick="showPage('modpacks')">Modpacks</a>
+    <a href="#" onclick="showPage('clients')">Clients</a>
+    <a href="#" onclick="showPage('marketplace')">Marketplace</a>
+    <a href="#" onclick="showPage('dashboard')">Mon Serveur</a>
+    <button class="btn-nav" onclick="openModal('create')">⬛ Créer un Serveur</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    🟢 <span class="ticker-item"><span class="pname">Steve_Gaming</span> a rejoint SkyBlock Pro &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">CreeperKiller</span> a créé un serveur Survival &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">DiamondQueen</span> a installé le modpack RLCraft &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">NethermineX</span> a battu le Dragon de l'End &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">PiglinTrader</span> a installé Optifine 1.20 &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">Alex_Builder</span> a ouvert un serveur créatif &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item"><span class="pname">WitchCraft99</span> a ajouté Botania &nbsp;•&nbsp;</span>
+    🟢 <span class="ticker-item">12,847 joueurs connectés en ce moment &nbsp;•&nbsp;</span>
+  </div>
+</div>
+
+<!-- ===== PAGE: HOME ===== -->
+<div id="page-home">
+  <div class="hero">
+    <h1>Hébergement Minecraft<br><span>100% Gratuit</span></h1>
+    <p>Crée ton serveur en 60 secondes. Plus de 500 modpacks, mods, plugins et clients disponibles. Aucune carte bancaire requise.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openModal('create')">🚀 Créer Mon Serveur</button>
+      <button class="btn-secondary" onclick="showPage('modpacks')">📦 Explorer les Modpacks</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num" id="counter-servers">48,293</div><div class="stat-label">Serveurs actifs</div></div>
+    <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Modpacks</div></div>
+    <div class="stat-item"><div class="stat-num" id="counter-players">12,847</div><div class="stat-label">Joueurs en ligne</div></div>
+    <div class="stat-item"><div class="stat-num">0€</div><div class="stat-label">Coût total</div></div>
+    <div class="stat-item"><div class="stat-num">99.9%</div><div class="stat-label">Uptime</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🎮 Pourquoi choisir <span>CraftHost</span> ?</div>
+    <div class="section-sub">Tout ce dont tu as besoin pour jouer avec tes amis</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+      <div class="setting-group"><h3>⚡ Démarrage Instantané</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">Ton serveur est en ligne en moins de 60 secondes. Configuration automatique, mise à jour automatique.</p></div>
+      <div class="setting-group"><h3>📦 500+ Modpacks</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">RLCraft, SkyFactory, Pixelmon, Feed The Beast, Valhelsia, All The Mods et bien d'autres modpacks préconfigurés.</p></div>
+      <div class="setting-group"><h3>🌿 Mods Alimentaires</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">Farmer's Delight, Pam's HarvestCraft, Spice of Life, Cooking for Blockheads — des dizaines de mods nourriture.</p></div>
+      <div class="setting-group"><h3>🗡️ Combat & Survie</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">Better Combat, Epic Fight, Spartan Weaponry, Dungeon Plus, Lycanite's Mobs — combat amélioré complet.</p></div>
+      <div class="setting-group"><h3>🏗️ Construction</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">Chisel & Bits, Macaw's Bridges, Supplementaries, BlockCarpentry, Architects Palette — construction avancée.</p></div>
+      <div class="setting-group"><h3>🔧 Gestion Facile</h3><p style="font-size:.85rem;color:var(--muted);line-height:1.6">Console en direct, gestionnaire de fichiers, sauvegardes automatiques, whitelist, bans, permissions.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⚡ Comment ça <span>marche</span> ?</div>
+    <div class="section-sub">3 étapes simples pour jouer</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+      <div style="text-align:center;padding:2rem">
+        <div style="font-size:3rem;margin-bottom:1rem">1️⃣</div>
+        <div style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.5rem;color:var(--green)">Crée ton serveur</div>
+        <div style="font-size:.85rem;color:var(--muted);line-height:1.6">Clique sur "Créer Mon Serveur", choisis ta version et ton modpack</div>
+      </div>
+      <div style="text-align:center;padding:2rem">
+        <div style="font-size:3rem;margin-bottom:1rem">2️⃣</div>
+        <div style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.5rem;color:var(--green)">Configure & Personnalise</div>
+        <div style="font-size:.85rem;color:var(--muted);line-height:1.6">Ajoute des mods, plugins, change les règles du monde, invite tes amis</div>
+      </div>
+      <div style="text-align:center;padding:2rem">
+        <div style="font-size:3rem;margin-bottom:1rem">3️⃣</div>
+        <div style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.5rem;color:var(--green)">Joue !</div>
+        <div style="font-size:.85rem;color:var(--muted);line-height:1.6">Copie l'adresse IP, connecte-toi dans Minecraft et joue avec tes amis</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: MODPACKS ===== -->
+<div id="page-modpacks" style="display:none">
+  <div class="section">
+    <div class="section-title">📦 <span>Modpacks</span> disponibles</div>
+    <div class="section-sub">Choisis parmi 500+ modpacks préconfigurés — installation en 1 clic</div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="filterModpacks('all',this)">Tous</div>
+      <div class="tab" onclick="filterModpacks('survie',this)">Survie</div>
+      <div class="tab" onclick="filterModpacks('skyblock',this)">SkyBlock</div>
+      <div class="tab" onclick="filterModpacks('techno',this)">Techno / Machines</div>
+      <div class="tab" onclick="filterModpacks('magic',this)">Magie</div>
+      <div class="tab" onclick="filterModpacks('rpg',this)">RPG / Aventure</div>
+      <div class="tab" onclick="filterModpacks('pixelmon',this)">Pixelmon</div>
+      <div class="tab" onclick="filterModpacks('client',this)">Clients Modifiés</div>
+    </div>
+
+    <div class="modpack-grid" id="modpack-grid">
+      <!-- RLCraft -->
+      <div class="modpack-card" data-cat="rpg survie">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#1a0808,#2a1010)">🐲</div>
+        <div class="badge-hot">HOT</div>
+        <div class="modpack-info">
+          <div class="modpack-name">RLCraft</div>
+          <div class="modpack-desc">Survie ultra difficile avec dragons, structures épiques et mécanique réaliste. Pour les warriors !</div>
+          <div class="modpack-tags">
+            <span class="tag tag-red" style="background:rgba(255,68,68,0.15);color:#ff6666;border:1px solid rgba(255,68,68,0.3)">Difficile</span>
+            <span class="tag tag-orange">Aventure</span>
+            <span class="tag tag-blue">1.12.2</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 2.4M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('RLCraft')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- SkyFactory 4 -->
+      <div class="modpack-card" data-cat="skyblock techno">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#080a1a,#10152a)">🌌</div>
+        <div class="badge-hot">HOT</div>
+        <div class="modpack-info">
+          <div class="modpack-name">SkyFactory 4</div>
+          <div class="modpack-desc">Commence sur une île dans le ciel et construis tout depuis zéro. Arbres à ressources, machines, automation.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-blue">SkyBlock</span>
+            <span class="tag tag-orange">Techno</span>
+            <span class="tag tag-green">1.12.2</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 1.9M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('SkyFactory 4')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Pixelmon -->
+      <div class="modpack-card" data-cat="pixelmon">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#0a1a08,#102a10)">⚡🔴</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Pixelmon Generations</div>
+          <div class="modpack-desc">Capture et dresse des Pokémon dans Minecraft ! Arènes, combats, Pokédex complet avec 900+ Pokémon.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-green">Pokémon</span>
+            <span class="tag tag-blue">1.16.5</span>
+            <span class="tag tag-purple">RPG</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 3.1M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Pixelmon')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Valhelsia 3 -->
+      <div class="modpack-card" data-cat="magic survie techno">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#1a081a,#2a0a2a)">🔮</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Valhelsia 3</div>
+          <div class="modpack-desc">Modpack équilibré mélangeant techno, magie et survie. Graphismes améliorés avec shaders inclus.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-purple">Magie</span>
+            <span class="tag tag-orange">Techno</span>
+            <span class="tag tag-green">1.16.5</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 890K téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Valhelsia 3')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- All The Mods 8 -->
+      <div class="modpack-card" data-cat="techno magic survie">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#0a150a,#102010)">⚙️</div>
+        <div class="badge-new">NOUVEAU</div>
+        <div class="modpack-info">
+          <div class="modpack-name">All The Mods 8</div>
+          <div class="modpack-desc">800+ mods dans un seul pack ! Techno, magie, construction, survie — tout est là. La référence ultime.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-diamond">800+ Mods</span>
+            <span class="tag tag-blue">1.20.1</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 1.2M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('All The Mods 8')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Farmer's Delight -->
+      <div class="modpack-card" data-cat="survie">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#0a1208,#152010)">🌾</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Farmer's Life</div>
+          <div class="modpack-desc">Cuisine avancée, culture, élevage, et nourriture réaliste. Farmer's Delight + 50 addons alimentaires.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-green">Nourriture</span>
+            <span class="tag tag-orange">Farming</span>
+            <span class="tag tag-green">1.20.1</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 450K téléchargements</span>
+            <button class="btn-install" onclick="installModpack("Farmer's Life")">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- FTB Revelation -->
+      <div class="modpack-card" data-cat="techno magic">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#1a1a08,#2a2a10)">🔧</div>
+        <div class="modpack-info">
+          <div class="modpack-name">FTB Revelation</div>
+          <div class="modpack-desc">Le classique Feed The Beast — automation, Thermal Expansion, Applied Energistics, Tinkers' Construct.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-orange">FTB</span>
+            <span class="tag tag-blue">1.12.2</span>
+            <span class="tag tag-orange">Techno</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 1.5M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('FTB Revelation')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Greg Tech -->
+      <div class="modpack-card" data-cat="techno">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#08101a,#102030)">🏭</div>
+        <div class="modpack-info">
+          <div class="modpack-name">GregTech: New Horizons</div>
+          <div class="modpack-desc">Le modpack le plus complexe qui existe. Milliers d'heures de gameplay. Uniquement pour les vrais.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-red" style="background:rgba(255,68,68,0.15);color:#ff6666;border:1px solid rgba(255,68,68,0.3)">Expert</span>
+            <span class="tag tag-blue">1.7.10</span>
+            <span class="tag tag-orange">Machines</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 780K téléchargements</span>
+            <button class="btn-install" onclick="installModpack('GregTech NH')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Better Minecraft -->
+      <div class="modpack-card" data-cat="survie">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#081a10,#103020)">🌍</div>
+        <div class="badge-new">NEW</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Better Minecraft+</div>
+          <div class="modpack-desc">Vanilla amélioré — nouveaux biomes, structures, mobs, dimensions et mécaniques. Compatible multijoueur.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-green">Vanilla+</span>
+            <span class="tag tag-green">1.20.1</span>
+            <span class="tag tag-blue">Multi</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 2.1M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Better Minecraft+')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Minecraft Dungeons -->
+      <div class="modpack-card" data-cat="rpg">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#180a08,#280a10)">⚔️</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Dungeon Crawl Pack</div>
+          <div class="modpack-desc">Donjons procéduraux, boss épiques, 500+ nouvelles armes, RPG complet avec niveaux et compétences.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-purple">RPG</span>
+            <span class="tag tag-orange">Donjons</span>
+            <span class="tag tag-green">1.19.2</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 670K téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Dungeon Crawl')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Magic Madness -->
+      <div class="modpack-card" data-cat="magic">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#180818,#280828)">✨</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Magic Madness</div>
+          <div class="modpack-desc">Thaumcraft, Botania, Astral Sorcery, Blood Magic, Ars Nouveau — toute la magie de Minecraft.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-purple">Magie</span>
+            <span class="tag tag-diamond">Rituels</span>
+            <span class="tag tag-blue">1.18.2</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 540K téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Magic Madness')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+      <!-- Cobblemon -->
+      <div class="modpack-card" data-cat="pixelmon">
+        <div class="modpack-banner" style="background:linear-gradient(135deg,#080a18,#101528)">🎮</div>
+        <div class="badge-new">NEW</div>
+        <div class="modpack-info">
+          <div class="modpack-name">Cobblemon</div>
+          <div class="modpack-desc">Le successeur moderne de Pixelmon — style vanilla, 400+ Pokémon, compatible 1.20.1, serveur multijoueur.</div>
+          <div class="modpack-tags">
+            <span class="tag tag-blue">Pokémon</span>
+            <span class="tag tag-green">1.20.1</span>
+            <span class="tag tag-diamond">Moderne</span>
+          </div>
+          <div class="modpack-footer">
+            <span class="modpack-downloads">⬇ 1.8M téléchargements</span>
+            <button class="btn-install" onclick="installModpack('Cobblemon')">INSTALLER</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: CLIENTS ===== -->
+<div id="page-clients" style="display:none">
+  <div class="section">
+    <div class="section-title">🖥️ Clients <span>Minecraft</span></div>
+    <div class="section-sub">Les meilleurs clients pour optimiser ton expérience</div>
+    <div class="client-grid">
+      <div class="client-card">
+        <div class="client-icon">🪶</div>
+        <div class="client-name">Feather Client</div>
+        <div class="client-desc">Client léger et rapide avec HUD personnalisable, FPS boostés et cosmétiques.</div>
+        <ul class="client-features">
+          <li>FPS jusqu'à 3x améliorés</li>
+          <li>HUD fully customizable</li>
+          <li>Cosmétiques gratuits</li>
+          <li>1.8.9 / 1.16.5 / 1.20.1</li>
+          <li>Anti-cheat intégré</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Feather Client téléchargé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">🌊</div>
+        <div class="client-name">Lunar Client</div>
+        <div class="client-desc">Client compétitif #1 avec mods Optifine, Sodium, performances max et anti-cheat.</div>
+        <ul class="client-features">
+          <li>Modes 1.7 → 1.20</li>
+          <li>+60 mods intégrés</li>
+          <li>Cosmétiques premium</li>
+          <li>VoiceChat intégré</li>
+          <li>Anti-cheat Lunar</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Lunar Client téléchargé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">⚡</div>
+        <div class="client-name">Badlion Client</div>
+        <div class="client-desc">Client PvP avec stats en temps réel, mod pack complet et interface moderne.</div>
+        <ul class="client-features">
+          <li>100+ modules PvP</li>
+          <li>Stats Hypixel intégrées</li>
+          <li>Macros & scripts</li>
+          <li>FPS Boost ×2</li>
+          <li>Replay mod intégré</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Badlion Client téléchargé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">🔷</div>
+        <div class="client-name">Fabric + Sodium</div>
+        <div class="client-desc">Le setup ultimate moderne — Fabric loader avec Sodium, Iris Shaders, Lithium, Indium.</div>
+        <ul class="client-features">
+          <li>Sodium (FPS ×5)</li>
+          <li>Iris Shaders</li>
+          <li>Lithium (serveur)</li>
+          <li>ModMenu GUI</li>
+          <li>1.18 → 1.21</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Fabric + Sodium installé !')">INSTALLER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">🎯</div>
+        <div class="client-name">OptiFine HD</div>
+        <div class="client-desc">Le classique incontournable — shaders, zoom, textures HD et performance améliorée.</div>
+        <ul class="client-features">
+          <li>Shaders GLSL</li>
+          <li>Textures HD 512px</li>
+          <li>Zoom OptiFine</li>
+          <li>Render distance améliorée</li>
+          <li>Toutes versions</li>
+        </ul>
+        <button class="btn-install" onclick="notify('OptiFine installé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">🌐</div>
+        <div class="client-name">Forge</div>
+        <div class="client-desc">Le loader de mods #1 — compatible avec 99% des mods Minecraft. Indispensable pour les modpacks.</div>
+        <ul class="client-features">
+          <li>Compatible 10000+ mods</li>
+          <li>Toutes versions 1.7+</li>
+          <li>API mod complète</li>
+          <li>CurseForge intégré</li>
+          <li>Update automatique</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Forge installé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">🌀</div>
+        <div class="client-name">Quilt</div>
+        <div class="client-desc">Fork moderne de Fabric — plus de mods, meilleures performances, développement actif.</div>
+        <ul class="client-features">
+          <li>Compatible mods Fabric</li>
+          <li>Performances +10%</li>
+          <li>API étendue</li>
+          <li>1.19 → 1.21</li>
+          <li>Open source</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Quilt installé !')">TÉLÉCHARGER</button>
+      </div>
+      <div class="client-card">
+        <div class="client-icon">☁️</div>
+        <div class="client-name">Aternos Launcher</div>
+        <div class="client-desc">Launcher dédié pour rejoindre les serveurs CraftHost facilement depuis n'importe où.</div>
+        <ul class="client-features">
+          <li>Un-click connect</li>
+          <li>Gestion multi-comptes</li>
+          <li>Auto-update mods</li>
+          <li>Skins personnalisés</li>
+          <li>Windows / Mac / Linux</li>
+        </ul>
+        <button class="btn-install" onclick="notify('Launcher CraftHost installé !')">TÉLÉCHARGER</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: MARKETPLACE ===== -->
+<div id="page-marketplace" style="display:none">
+  <div class="section">
+    <div class="section-title">🛒 <span>Marketplace</span></div>
+    <div class="section-sub">Mods, plugins, maps, skins — tout est gratuit</div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchMarketTab('mods',this)">Mods</div>
+      <div class="tab" onclick="switchMarketTab('plugins',this)">Plugins</div>
+      <div class="tab" onclick="switchMarketTab('maps',this)">Maps</div>
+      <div class="tab" onclick="switchMarketTab('skins',this)">Skins</div>
+      <div class="tab" onclick="switchMarketTab('shaders',this)">Shaders</div>
+      <div class="tab" onclick="switchMarketTab('textures',this)">Textures</div>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="🔍 Rechercher mods, maps, plugins...">
+      <button class="search-btn" onclick="notify('Recherche en cours...')">CHERCHER</button>
+    </div>
+    <div id="market-content">
+      <div class="market-grid" id="market-mods">
+        <div class="market-card"><div class="market-banner">🌾</div><div class="market-info"><div class="market-name">Farmer's Delight</div><div class="market-desc">Nourriture avancée — cuisine, fermage, 100+ recettes, comptoirs de cuisine</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Farmer\'s Delight installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🐉</div><div class="market-info"><div class="market-name">Ice and Fire</div><div class="market-desc">Dragons, griffons, cyclopes, sirènes — 20 créatures mythologiques</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Ice and Fire installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">⚙️</div><div class="market-info"><div class="market-name">Create</div><div class="market-desc">Machines mécaniques, convoyeurs, engrenages — industrie steampunk</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Create installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🗺️</div><div class="market-info"><div class="market-name">Waystones</div><div class="market-desc">Téléportation via pierres de téléportation. Fast travel pour ton serveur</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Waystones installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🏰</div><div class="market-info"><div class="market-name">Dungeons Enhanced</div><div class="market-desc">Donjons générés procéduralement avec boss, trésors et mécanismes</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Dungeons Enhanced installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🧪</div><div class="market-info"><div class="market-name">Ars Nouveau</div><div class="market-desc">Système de magie custom — crée tes propres sorts et incantations</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Ars Nouveau installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🍄</div><div class="market-info"><div class="market-name">Biomes O' Plenty</div><div class="market-desc">90+ nouveaux biomes magnifiques avec flore et faune uniques</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Biomes O Plenty installé !')">INSTALL</button></div></div></div>
+        <div class="market-card"><div class="market-banner">🗡️</div><div class="market-info"><div class="market-name">Better Combat</div><div class="market-desc">Combat fluide et dynamique — combos, esquives, contre-attaques</div><div class="market-footer"><span class="market-price free">GRATUIT</span><button class="btn-install" onclick="notify('Better Combat installé !')">INSTALL</button></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: DASHBOARD ===== -->
+<div id="page-dashboard" style="display:none">
+  <div class="section">
+    <div class="section-title">🖥️ Mon <span>Dashboard</span></div>
+    <div class="section-sub">Gère ton serveur en temps réel</div>
+
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <div class="server-sidebar">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+          <div style="font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Mes Serveurs</div>
+          <button class="btn-install" style="font-size:.7rem;padding:.2rem .5rem" onclick="openModal('create')">+ NOUVEAU</button>
+        </div>
+        <ul class="server-list">
+          <li class="active" onclick="selectServer(this,'SkyBlock Pro')"><span class="server-dot"></span> SkyBlock Pro</li>
+          <li onclick="selectServer(this,'Survival World')"><span class="server-dot"></span> Survival World</li>
+          <li onclick="selectServer(this,'PVP Arena')"><span class="server-dot offline"></span> PVP Arena</li>
+          <li onclick="selectServer(this,'Creative Hub')"><span class="server-dot loading pulse"></span> Creative Hub</li>
+          <li onclick="selectServer(this,'RLCraft Server')"><span class="server-dot"></span> RLCraft Server</li>
+        </ul>
+        <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:.5rem">
+          <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">STOCKAGE</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:34%"></div></div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">3.4 GB / 10 GB</div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:1rem;margin-bottom:.5rem">PLAN</div>
+          <div style="background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green);padding:.4rem .8rem;border-radius:4px;font-size:.78rem;font-family:'Orbitron',monospace;text-align:center">GRATUIT — ILLIMITÉ</div>
+        </div>
+      </div>
+
+      <!-- Main Panel -->
+      <div>
+        <div class="server-panel" style="margin-bottom:1.2rem">
+          <div class="server-header">
+            <div>
+              <div class="server-name-big" id="current-server-name">SkyBlock Pro</div>
+              <div style="font-size:.82rem;color:var(--muted);margin-top:.2rem">Version: <span style="color:var(--green)">1.20.1</span> • Modpack: <span style="color:var(--green)">SkyFactory 4</span></div>
+            </div>
+            <span class="status-badge status-online">🟢 EN LIGNE</span>
+          </div>
+
+          <!-- Resource Cards -->
+          <div class="resource-charts">
+            <div class="resource-card">
+              <div class="resource-label">CPU</div>
+              <div class="resource-val" id="cpu-val">23%</div>
+              <div class="progress-bar"><div class="progress-fill" id="cpu-bar" style="width:23%"></div></div>
+            </div>
+            <div class="resource-card">
+              <div class="resource-label">RAM</div>
+              <div class="resource-val" id="ram-val">1.2 GB</div>
+              <div class="progress-bar"><div class="progress-fill" id="ram-bar" style="width:40%"></div></div>
+            </div>
+            <div class="resource-card">
+              <div class="resource-label">Joueurs</div>
+              <div class="resource-val" id="players-val">4/20</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+            </div>
+            <div class="resource-card">
+              <div class="resource-label">TPS</div>
+              <div class="resource-val" style="color:var(--green)">20.0</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+
+          <!-- Network -->
+          <div class="network-box">
+            <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem">Adresse IP du serveur</div>
+            <span class="network-ip" id="server-ip">skyblock-pro.crafthost.io:25565</span>
+            <button class="copy-btn" onclick="copyIP()">📋 Copier</button>
+          </div>
+
+          <!-- Controls -->
+          <div class="server-controls">
+            <button class="btn-ctrl btn-stop" onclick="toggleServer()">⏹ ARRÊTER</button>
+            <button class="btn-ctrl btn-restart" onclick="notify('Serveur en cours de redémarrage...')">🔄 REDÉMARRER</button>
+            <button class="btn-ctrl btn-backup" onclick="notify('Sauvegarde créée !')">💾 SAUVEGARDER</button>
+            <button class="btn-ctrl" style="background:var(--purple);color:white" onclick="showDashTab('mods-tab')">📦 GÉRER MODS</button>
+            <button class="btn-ctrl" style="background:var(--card2);color:var(--text);border:1px solid var(--border)" onclick="showDashTab('files-tab')">📁 FICHIERS</button>
+            <button class="btn-ctrl" style="background:var(--card2);color:var(--text);border:1px solid var(--border)" onclick="showDashTab('settings-tab')">⚙️ PARAMÈTRES</button>
+          </div>
+
+          <!-- Dashboard Tabs -->
+          <div class="tabs" style="margin-bottom:1rem">
+            <div class="tab active" id="dt-console" onclick="showDashTab('console-tab',this)">Console</div>
+            <div class="tab" id="dt-players" onclick="showDashTab('players-tab',this)">Joueurs</div>
+            <div class="tab" id="dt-mods" onclick="showDashTab('mods-tab',this)">Mods/Plugins</div>
+            <div class="tab" id="dt-settings" onclick="showDashTab('settings-tab',this)">Paramètres Monde</div>
+            <div class="tab" id="dt-files" onclick="showDashTab('files-tab',this)">Fichiers</div>
+            <div class="tab" id="dt-backup" onclick="showDashTab('backup-tab',this)">Sauvegardes</div>
+          </div>
+
+          <!-- CONSOLE TAB -->
+          <div id="console-tab" class="tab-content active">
+            <div class="console" id="console-output">
+              <div class="console-line system">[SYSTEM] Serveur SkyBlock Pro démarré — 1.20.1 SkyFactory 4</div>
+              <div class="console-line info">[INFO] Loading 312 mods...</div>
+              <div class="console-line info">[INFO] Mods chargés avec succès en 8.4s</div>
+              <div class="console-line info">[INFO] Monde "world" chargé (Seed: -847291038)</div>
+              <div class="console-line join">[JOIN] ⟶ Steve_Gaming a rejoint (4/20)</div>
+              <div class="console-line join">[JOIN] ⟶ DiamondQueen a rejoint (3/20)</div>
+              <div class="console-line chat">[CHAT] &lt;Steve_Gaming&gt; Salut tout le monde !</div>
+              <div class="console-line chat">[CHAT] &lt;DiamondQueen&gt; Yo ! On fait le boss ?</div>
+              <div class="console-line info">[INFO] Auto-save complete (0.3s)</div>
+              <div class="console-line info">[TPS] TPS: 20.0 | Mem: 1.2GB/4GB</div>
+            </div>
+            <div class="console-input-row">
+              <input class="console-input" id="cmd-input" type="text" placeholder="Entrer une commande... ex: /op Steve_Gaming" onkeydown="if(event.key==='Enter')sendCmd()">
+              <button class="btn-send" onclick="sendCmd()">ENVOYER</button>
+            </div>
+          </div>
+
+          <!-- PLAYERS TAB -->
+          <div id="players-tab" class="tab-content">
+            <div class="alert alert-success">✅ 4 joueurs connectés sur 20 slots disponibles</div>
+            <table class="players-table">
+              <thead><tr><th>Joueur</th><th>Rang</th><th>Temps en jeu</th><th>Ping</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td style="display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem">🧑 Steve_Gaming</td><td><span class="rank-badge" style="background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid rgba(255,215,0,0.3)">ADMIN</span></td><td>47h 23min</td><td style="color:var(--green)">24ms</td><td><button class="btn-sm btn-dl" onclick="notify('Steve_Gaming promu OP')">OP</button> <button class="btn-sm btn-delete" onclick="notify('Steve_Gaming kické')">KICK</button></td></tr>
+                <tr><td style="display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem">🧑 DiamondQueen</td><td><span class="rank-badge" style="background:rgba(68,136,255,0.15);color:var(--blue);border:1px solid rgba(68,136,255,0.3)">MOD</span></td><td>23h 10min</td><td style="color:var(--green)">67ms</td><td><button class="btn-sm btn-dl" onclick="notify('DiamondQueen promu OP')">OP</button> <button class="btn-sm btn-delete" onclick="notify('DiamondQueen kické')">KICK</button></td></tr>
+                <tr><td style="display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem">🧑 NethermineX</td><td><span class="rank-badge" style="background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2)">JOUEUR</span></td><td>12h 05min</td><td style="color:var(--orange)">134ms</td><td><button class="btn-sm btn-dl" onclick="notify('NethermineX promu OP')">OP</button> <button class="btn-sm btn-delete" onclick="notify('NethermineX kické')">KICK</button></td></tr>
+                <tr><td style="display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem">🧑 Alex_Builder</td><td><span class="rank-badge" style="background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2)">JOUEUR</span></td><td>3h 41min</td><td style="color:var(--green)">45ms</td><td><button class="btn-sm btn-dl" onclick="notify('Alex_Builder promu OP')">OP</button> <button class="btn-sm btn-delete" onclick="notify('Alex_Builder kické')">KICK</button></td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap">
+              <button class="btn-ctrl btn-restart" style="font-size:.78rem;padding:.5rem 1rem" onclick="openModal('whitelist')">📋 WHITELIST</button>
+              <button class="btn-ctrl" style="background:var(--card2);border:1px solid var(--border);font-size:.78rem;padding:.5rem 1rem" onclick="openModal('ban')">🔨 BANNIR</button>
+              <button class="btn-ctrl btn-backup" style="font-size:.78rem;padding:.5rem 1rem" onclick="openModal('invite')">📨 INVITER UN AMI</button>
+            </div>
+          </div>
+
+          <!-- MODS TAB -->
+          <div id="mods-tab" class="tab-content">
+            <div class="search-bar">
+              <input class="search-input" type="text" placeholder="🔍 Rechercher un mod...">
+              <button class="search-btn" onclick="notify('Recherche de mods...')">CHERCHER</button>
+            </div>
+            <div class="alert alert-info">📦 312 mods installés • <a href="#" style="color:var(--blue)" onclick="notify('Ouverture du Marketplace...')">Ajouter des mods depuis le Marketplace →</a></div>
+            <div class="mods-grid">
+              <div class="mod-item"><div class="mod-icon">🌾</div><div class="mod-info"><div class="mod-name">Farmer's Delight</div><div class="mod-author">vectorwing</div><div class="mod-ver">v1.2.3 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">⚙️</div><div class="mod-info"><div class="mod-name">Create</div><div class="mod-author">simibubi</div><div class="mod-ver">v0.5.1 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">🗡️</div><div class="mod-info"><div class="mod-name">Better Combat</div><div class="mod-author">YungNick</div><div class="mod-ver">v1.7.2 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">🌍</div><div class="mod-info"><div class="mod-name">Biomes O' Plenty</div><div class="mod-author">Glitchfiend</div><div class="mod-ver">v18.0.0 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">🐉</div><div class="mod-info"><div class="mod-name">Ice and Fire</div><div class="mod-author">alex1the1666</div><div class="mod-ver">v2.3.1 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">🗺️</div><div class="mod-info"><div class="mod-name">Waystones</div><div class="mod-author">BlayTheNinth</div><div class="mod-ver">v14.0.0 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">🍖</div><div class="mod-info"><div class="mod-name">Pam's HarvestCraft</div><div class="mod-author">MatrexsVigil</div><div class="mod-ver">v9.0.0 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+              <div class="mod-item"><div class="mod-icon">✨</div><div class="mod-info"><div class="mod-name">Ars Nouveau</div><div class="mod-author">baileyholl</div><div class="mod-ver">v4.0.0 • 1.20.1</div></div><label class="toggle-switch"><input type="checkbox" onchange="notify(this.checked?'Mod activé':'Mod désactivé')"><span class="toggle-slider"></span></label></div>
+            </div>
+          </div>
+
+          <!-- SETTINGS TAB -->
+          <div id="settings-tab" class="tab-content">
+            <div class="settings-grid">
+              <div class="setting-group">
+                <h3>🌍 Monde</h3>
+                <div class="setting-row"><div class="setting-label">Mode de jeu<small>Par défaut pour les nouveaux joueurs</small></div><select class="setting-select" onchange="notify('Paramètre sauvegardé')"><option>Survie</option><option>Créatif</option><option>Aventure</option><option>Spectateur</option></select></div>
+                <div class="setting-row"><div class="setting-label">Difficulté</div><select class="setting-select" onchange="notify('Paramètre sauvegardé')"><option>Paisible</option><option>Facile</option><option selected>Normal</option><option>Difficile</option></select></div>
+                <div class="setting-row"><div class="setting-label">Type de monde</div><select class="setting-select" onchange="notify('Paramètre sauvegardé')"><option selected>Normal</option><option>Plat</option><option>Grande île</option><option>Amplified</option></select></div>
+                <div class="setting-row"><div class="setting-label">Graine (Seed)</div><input class="setting-input" type="text" value="-847291038" style="width:120px" onchange="notify('Seed mis à jour')"></div>
+                <div class="setting-row"><div class="setting-label">Distance de rendu</div><input class="setting-input" type="number" value="10" min="4" max="32" onchange="notify('Paramètre sauvegardé')"></div>
+              </div>
+              <div class="setting-group">
+                <h3>👥 Joueurs</h3>
+                <div class="setting-row"><div class="setting-label">Slots max</div><input class="setting-input" type="number" value="20" min="1" max="200" onchange="notify('Paramètre sauvegardé')"></div>
+                <div class="setting-row"><div class="setting-label">Whitelist<small>Restreindre l'accès</small></div><label class="toggle-switch" style="margin:0"><input type="checkbox" onchange="notify(this.checked?'Whitelist activée':'Whitelist désactivée')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Mode PvP</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'PvP activé':'PvP désactivé')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Spawn de monstres</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'Activé':'Désactivé')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Spawn d'animaux</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'Activé':'Désactivé')"><span class="toggle-slider"></span></label></div>
+              </div>
+              <div class="setting-group">
+                <h3>🔥 Règles du Jeu</h3>
+                <div class="setting-row"><div class="setting-label">Mort conserve items</div><label class="toggle-switch" style="margin:0"><input type="checkbox" onchange="notify(this.checked?'KeepInventory activé':'KeepInventory désactivé')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Dégâts de chute</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'Activé':'Désactivé')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Propagation du feu</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'Activé':'Désactivé')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">TNT</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'TNT activée':'TNT désactivée')"><span class="toggle-slider"></span></label></div>
+                <div class="setting-row"><div class="setting-label">Cycle jour/nuit</div><label class="toggle-switch" style="margin:0"><input type="checkbox" checked onchange="notify(this.checked?'Activé':'Désactivé')"><span class="toggle-slider"></span></label></div>
+              </div>
+              <div class="setting-group">
+                <h3>⚙️ Performances</h3>
+                <div class="setting-row"><div class="setting-label">RAM allouée</div><select class="setting-select" onchange="notify('RAM mise à jour')"><option>1 GB</option><option>2 GB</option><option selected>4 GB</option><option>8 GB</option></select></div>
+                <div class="setting-row"><div class="setting-label">Version Java</div><select class="setting-select"><option>Java 17</option><option selected>Java 21</option></select></div>
+                <div class="setting-row"><div class="setting-label">Sauvegarde auto</div><select class="setting-select" onchange="notify('Paramètre sauvegardé')"><option>Toutes les 15 min</option><option selected>Toutes les 30 min</option><option>Toutes les heures</option></select></div>
+              </div>
+            </div>
+            <div style="margin-top:1rem">
+              <button class="btn-primary" style="font-size:.85rem;padding:.6rem 1.5rem" onclick="notify('✅ Tous les paramètres sauvegardés !')">💾 SAUVEGARDER LES PARAMÈTRES</button>
+            </div>
+          </div>
+
+          <!-- FILES TAB -->
+          <div id="files-tab" class="tab-content">
+            <div class="file-manager">
+              <div class="file-toolbar">
+                <button class="btn-sm btn-dl" onclick="notify('Fichier créé')">+ Nouveau fichier</button>
+                <button class="btn-sm btn-backup" onclick="notify('Dossier créé')">📁 Nouveau dossier</button>
+                <button class="btn-sm" style="background:var(--card2);border:1px solid var(--border);color:var(--text)" onclick="notify('Fichier importé')">⬆ Importer</button>
+                <input class="file-path" value="/server/" readonly>
+              </div>
+              <div class="file-list">
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">mods/</span><span class="fi-size">312 fichiers</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">plugins/</span><span class="fi-size">24 fichiers</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">world/</span><span class="fi-size">2.1 GB</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">world_nether/</span><span class="fi-size">143 MB</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">world_the_end/</span><span class="fi-size">87 MB</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">config/</span><span class="fi-size">89 fichiers</span></div>
+                <div class="file-item"><span class="fi-icon">📁</span><span class="fi-name">logs/</span><span class="fi-size">23 fichiers</span></div>
+                <div class="file-item"><span class="fi-icon">📄</span><span class="fi-name">server.properties</span><span class="fi-size">3 KB</span></div>
+                <div class="file-item"><span class="fi-icon">📄</span><span class="fi-name">banned-players.json</span><span class="fi-size">1 KB</span></div>
+                <div class="file-item"><span class="fi-icon">📄</span><span class="fi-name">whitelist.json</span><span class="fi-size">1 KB</span></div>
+                <div class="file-item"><span class="fi-icon">📄</span><span class="fi-name">ops.json</span><span class="fi-size">1 KB</span></div>
+                <div class="file-item"><span class="fi-icon">📄</span><span class="fi-name">eula.txt</span><span class="fi-size">0.3 KB</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BACKUP TAB -->
+          <div id="backup-tab" class="tab-content">
+            <div class="alert alert-success">✅ Sauvegarde automatique toutes les 30 minutes</div>
+            <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+              <button class="btn-primary" style="font-size:.85rem;padding:.6rem 1.2rem" onclick="createBackup()">💾 CRÉER UNE SAUVEGARDE</button>
+            </div>
+            <ul class="backup-list" id="backup-list">
+              <li class="backup-item"><div><div class="backup-name">backup_2024-01-15_14h30</div><div class="backup-date">Aujourd'hui à 14:30</div></div><div class="backup-size">2.3 GB</div><div class="backup-actions"><button class="btn-sm btn-restore" onclick="notify('Restauration en cours...')">RESTAURER</button><button class="btn-sm btn-dl" onclick="notify('Téléchargement...')">⬇</button><button class="btn-sm btn-delete" onclick="deleteBackup(this)">✕</button></div></li>
+              <li class="backup-item"><div><div class="backup-name">backup_2024-01-15_08h00</div><div class="backup-date">Aujourd'hui à 8:00</div></div><div class="backup-size">2.2 GB</div><div class="backup-actions"><button class="btn-sm btn-restore" onclick="notify('Restauration en cours...')">RESTAURER</button><button class="btn-sm btn-dl" onclick="notify('Téléchargement...')">⬇</button><button class="btn-sm btn-delete" onclick="deleteBackup(this)">✕</button></div></li>
+              <li class="backup-item"><div><div class="backup-name">backup_2024-01-14_20h00</div><div class="backup-date">Hier à 20:00</div></div><div class="backup-size">2.1 GB</div><div class="backup-actions"><button class="btn-sm btn-restore" onclick="notify('Restauration en cours...')">RESTAURER</button><button class="btn-sm btn-dl" onclick="notify('Téléchargement...')">⬇</button><button class="btn-sm btn-delete" onclick="deleteBackup(this)">✕</button></div></li>
+            </ul>
+          </div>
+
+        </div><!-- end server-panel -->
+      </div>
+    </div><!-- end dashboard -->
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="modal-create">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⬛ Créer un Nouveau Serveur</div>
+      <button class="modal-close" onclick="closeModal('create')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nom du serveur</label><input class="form-input" type="text" placeholder="Mon Super Serveur" id="srv-name"></div>
+      <div class="form-group"><label class="form-label">Version Minecraft</label>
+        <select class="form-select" id="srv-version">
+          <option>1.20.4 (Dernière)</option><option>1.20.1 (Recommandée)</option><option>1.19.4</option><option>1.19.2</option><option>1.18.2</option><option>1.16.5</option><option>1.12.2</option><option>1.8.9</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Type de serveur</label>
+        <select class="form-select" id="srv-type" onchange="updateServerType(this.value)">
+          <option>Vanilla</option><option>Paper (Recommandé)</option><option>Forge (Mods)</option><option>Fabric (Mods)</option><option>Spigot</option><option>Purpur</option><option>BungeeCord</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Modpack (optionnel)</label>
+        <select class="form-select">
+          <option value="">Aucun — Vanilla</option>
+          <option>RLCraft</option><option>SkyFactory 4</option><option>Pixelmon Generations</option>
+          <option>Valhelsia 3</option><option>All The Mods 8</option><option>Farmer's Life</option>
+          <option>FTB Revelation</option><option>GregTech: New Horizons</option><option>Better Minecraft+</option>
+          <option>Magic Madness</option><option>Cobblemon</option><option>Dungeon Crawl Pack</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Slots joueurs</label>
+        <select class="form-select">
+          <option>10 joueurs</option><option selected>20 joueurs</option><option>50 joueurs</option><option>100 joueurs</option><option>Illimité</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">RAM</label>
+        <select class="form-select">
+          <option>1 GB</option><option>2 GB</option><option selected>4 GB (Recommandé)</option><option>8 GB</option>
+        </select>
+      </div>
+      <div class="alert alert-success">✅ Tout est 100% GRATUIT — Aucune carte bancaire</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('create')" style="padding:.6rem 1.2rem">Annuler</button>
+      <button class="btn-primary" style="padding:.6rem 1.5rem" onclick="createServer()">🚀 CRÉER LE SERVEUR</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-invite">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">📨 Inviter un ami</div><button class="modal-close" onclick="closeModal('invite')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Pseudo Minecraft de l'ami</label><input class="form-input" type="text" placeholder="Pseudo_Minecraft"></div>
+      <div class="form-group"><label class="form-label">Rang à attribuer</label><select class="form-select"><option>Joueur</option><option>VIP</option><option>Modérateur</option><option>Admin</option></select></div>
+      <div class="network-box"><div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem">Lien d'invitation direct</div><div style="font-family:'Orbitron',monospace;font-size:.85rem;color:var(--green);word-break:break-all">crafthost.io/join/skyblock-pro-x9k2m</div><button class="copy-btn" onclick="notify('Lien copié !')">📋 Copier</button></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeModal('invite')" style="padding:.6rem 1.2rem">Fermer</button><button class="btn-primary" style="padding:.6rem 1.5rem" onclick="closeModal('invite');notify('Invitation envoyée !')">📨 INVITER</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-whitelist">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">📋 Whitelist</div><button class="modal-close" onclick="closeModal('whitelist')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Ajouter à la whitelist</label><div style="display:flex;gap:.5rem"><input class="form-input" type="text" placeholder="Pseudo Minecraft" style="flex:1"><button class="btn-primary" style="padding:.7rem 1rem;font-size:.85rem" onclick="notify('Joueur ajouté à la whitelist')">AJOUTER</button></div></div>
+      <div style="margin-top:1rem"><div style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px">Joueurs autorisés</div>
+        <div class="file-item"><span>🟢</span><span class="fi-name">Steve_Gaming</span><button class="btn-sm btn-delete" style="margin-left:auto" onclick="notify('Retiré de la whitelist')">✕</button></div>
+        <div class="file-item"><span>🟢</span><span class="fi-name">DiamondQueen</span><button class="btn-sm btn-delete" style="margin-left:auto" onclick="notify('Retiré de la whitelist')">✕</button></div>
+        <div class="file-item"><span>🟢</span><span class="fi-name">NethermineX</span><button class="btn-sm btn-delete" style="margin-left:auto" onclick="notify('Retiré de la whitelist')">✕</button></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn-primary" onclick="closeModal('whitelist');notify('Whitelist sauvegardée !')" style="padding:.6rem 1.5rem">SAUVEGARDER</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ban">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">🔨 Bannir un joueur</div><button class="modal-close" onclick="closeModal('ban')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Pseudo du joueur</label><input class="form-input" type="text" placeholder="Pseudo Minecraft" id="ban-name"></div>
+      <div class="form-group"><label class="form-label">Raison</label><input class="form-input" type="text" placeholder="Raison du ban..." id="ban-reason"></div>
+      <div class="form-group"><label class="form-label">Durée</label><select class="form-select"><option>1 jour</option><option>1 semaine</option><option>1 mois</option><option>Permanent</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeModal('ban')" style="padding:.6rem 1.2rem">Annuler</button><button class="btn-ctrl btn-stop" style="font-size:.85rem;font-family:'Orbitron',monospace;padding:.6rem 1.5rem;border-radius:4px" onclick="closeModal('ban');notify('Joueur banni !')">🔨 BANNIR</button></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"><span class="notif-icon">✅</span><span id="notif-msg">Action réalisée</span></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">⬛ CRAFTHOST</div>
+  <p>Hébergement Minecraft gratuit • 500+ modpacks • Aucune carte bancaire requise</p>
+  <p style="margin-top:1rem;color:rgba(122,170,122,0.4);font-size:.72rem">Projet éducatif & communautaire • Tous les mods restent la propriété de leurs auteurs respectifs</p>
+</footer>
+
+<script>
+// PAGE ROUTING
+function showPage(page){
+  ['home','modpacks','clients','marketplace','dashboard'].forEach(p=>{
+    document.getElementById('page-'+p).style.display=p===page?'block':'none'
+  })
+  window.scrollTo(0,0)
+}
+
+// MODPACK FILTER
+function filterModpacks(cat,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'))
+  el.classList.add('active')
+  document.querySelectorAll('.modpack-card').forEach(card=>{
+    const cats=card.dataset.cat||''
+    card.style.display=(cat==='all'||cats.includes(cat))?'block':'none'
+  })
+}
+
+// INSTALL MODPACK
+function installModpack(name){
+  notify('📦 Installation de '+name+' en cours...')
+  setTimeout(()=>{
+    notify('✅ '+name+' installé ! Accède au dashboard pour démarrer.')
+  },2500)
+}
+
+// DASHBOARD TABS
+function showDashTab(id,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+  if(el){
+    document.querySelectorAll('#page-dashboard .tabs .tab').forEach(t=>t.classList.remove('active'))
+    el.classList.add('active')
+  }
+}
+
+// MARKET TABS
+function switchMarketTab(type,el){
+  document.querySelectorAll('#page-marketplace .tabs .tab').forEach(t=>t.classList.remove('active'))
+  el.classList.add('active')
+  const contents={
+    mods:'Mods Minecraft',plugins:'Plugins Bukkit/Spigot',
+    maps:'Maps & Mondes',skins:'Skins & Capes',
+    shaders:'Shaders & Ressources',textures:'Packs de Textures'
+  }
+  notify('Chargement: '+contents[type]+'...')
+}
+
+// SERVER CONTROLS
+let serverOn=true
+function toggleServer(){
+  serverOn=!serverOn
+  const badge=document.querySelector('.status-badge')
+  if(badge){
+    badge.className='status-badge '+(serverOn?'status-online':'status-offline')
+    badge.textContent=serverOn?'🟢 EN LIGNE':'🔴 HORS LIGNE'
+  }
+  notify(serverOn?'✅ Serveur démarré !':'⏹ Serveur arrêté')
+  addConsole(serverOn?'[SYSTEM] Serveur démarré':'[SYSTEM] Serveur arrêté',serverOn?'system':'error')
+}
+
+function selectServer(el,name){
+  document.querySelectorAll('.server-list li').forEach(li=>li.classList.remove('active'))
+  el.classList.add('active')
+  document.getElementById('current-server-name').textContent=name
+  document.getElementById('server-ip').textContent=name.toLowerCase().replace(/\s/g,'-')+'.crafthost.io:25565'
+  notify('Serveur sélectionné: '+name)
+}
+
+// CONSOLE
+function addConsole(msg,type='info'){
+  const c=document.getElementById('console-output')
+  if(!c)return
+  const d=document.createElement('div')
+  d.className='console-line '+type
+  d.textContent=msg
+  c.appendChild(d)
+  c.scrollTop=c.scrollHeight
+}
+function sendCmd(){
+  const inp=document.getElementById('cmd-input')
+  if(!inp||!inp.value.trim())return
+  const cmd=inp.value
+  addConsole('> '+cmd,'info')
+  inp.value=''
+  setTimeout(()=>{
+    if(cmd.startsWith('/say '))addConsole('[CHAT] [Server] '+cmd.slice(5),'chat')
+    else if(cmd.startsWith('/op '))addConsole('[OP] '+cmd.slice(4)+' est maintenant OP','system')
+    else if(cmd.startsWith('/kick '))addConsole('[KICK] '+cmd.slice(6)+' a été kické','warn')
+    else if(cmd.startsWith('/ban '))addConsole('[BAN] '+cmd.slice(5)+' a été banni','error')
+    else if(cmd.startsWith('/gamemode '))addConsole('[MODE] Mode de jeu changé','system')
+    else if(cmd.startsWith('/tp '))addConsole('[TP] Téléportation effectuée','system')
+    else if(cmd.startsWith('/give '))addConsole('[GIVE] Items donnés','system')
+    else if(cmd.startsWith('/time '))addConsole('[TIME] Heure changée','system')
+    else if(cmd.startsWith('/weather '))addConsole('[WEATHER] Météo changée','system')
+    else if(cmd.startsWith('/stop'))addConsole('[SYSTEM] Arrêt du serveur...','error')
+    else addConsole('[INFO] Commande exécutée: '+cmd,'info')
+  },300)
+}
+
+// COPY IP
+function copyIP(){
+  const ip=document.getElementById('server-ip')
+  if(ip){navigator.clipboard.writeText(ip.textContent).catch(()=>{})}
+  notify('📋 IP copiée: '+document.getElementById('server-ip').textContent)
+}
+
+// BACKUP
+function createBackup(){
+  const d=new Date()
+  const name='backup_'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'_'+String(d.getHours()).padStart(2,'0')+'h'+String(d.getMinutes()).padStart(2,'0')
+  const li=document.createElement('li')
+  li.className='backup-item'
+  li.innerHTML=`<div><div class="backup-name">${name}</div><div class="backup-date">Maintenant</div></div><div class="backup-size">2.4 GB</div><div class="backup-actions"><button class="btn-sm btn-restore" onclick="notify('Restauration...')">RESTAURER</button><button class="btn-sm btn-dl" onclick="notify('Téléchargement...')">⬇</button><button class="btn-sm btn-delete" onclick="deleteBackup(this)">✕</button></div>`
+  const list=document.getElementById('backup-list')
+  if(list)list.prepend(li)
+  notify('💾 Nouvelle sauvegarde créée !')
+}
+function deleteBackup(btn){
+  btn.closest('.backup-item').remove()
+  notify('🗑️ Sauvegarde supprimée')
+}
+
+// CREATE SERVER
+function createServer(){
+  const name=document.getElementById('srv-name').value||'Mon Serveur'
+  closeModal('create')
+  notify('🚀 Création de "'+name+'" en cours...')
+  setTimeout(()=>{
+    notify('✅ Serveur "'+name+'" créé et démarré !')
+    showPage('dashboard')
+  },2000)
+}
+
+// MODALS
+function openModal(id){
+  const m=document.getElementById('modal-'+id)
+  if(m)m.classList.add('open')
+}
+function closeModal(id){
+  const m=document.getElementById('modal-'+id)
+  if(m)m.classList.remove('open')
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})
+})
+
+// NOTIFICATIONS
+let notifTimer=null
+function notify(msg){
+  const n=document.getElementById('notif')
+  const t=document.getElementById('notif-msg')
+  if(!n||!t)return
+  t.textContent=msg
+  n.classList.add('show')
+  clearTimeout(notifTimer)
+  notifTimer=setTimeout(()=>n.classList.remove('show'),3000)
+}
+
+// RESOURCE SIMULATION
+setInterval(()=>{
+  const cpu=Math.floor(15+Math.random()*30)
+  const ram=(1+Math.random()*0.8).toFixed(1)
+  const cv=document.getElementById('cpu-val')
+  const rv=document.getElementById('ram-val')
+  const cb=document.getElementById('cpu-bar')
+  const rb=document.getElementById('ram-bar')
+  if(cv)cv.textContent=cpu+'%'
+  if(rv)rv.textContent=ram+' GB'
+  if(cb)cb.style.width=cpu+'%'
+  if(rb)rb.style.width=(parseFloat(ram)/4*100)+'%'
+},3000)
+
+// LIVE CONSOLE MESSAGES
+const consoleMessages=[
+  {t:'[INFO] Auto-save complete (0.2s)',c:'info'},
+  {t:'[TPS] TPS: 20.0 | Mem: 1.4GB/4GB',c:'info'},
+  {t:'[JOIN] ⟶ PiglinTrader a rejoint (5/20)',c:'join'},
+  {t:'[CHAT] <NethermineX> Quelqu\'un a du diamond ?',c:'chat'},
+  {t:'[INFO] Chunk loaded: 847 chunks actifs',c:'info'},
+  {t:'[WARN] Mémoire à 78% — surveiller',c:'warn'},
+  {t:'[INFO] Auto-save complete (0.3s)',c:'info'},
+  {t:'[CHAT] <Alex_Builder> Je construis une maison !',c:'chat'},
+  {t:'[JOIN] ⟶ WitchCraft99 a rejoint (6/20)',c:'join'},
+  {t:'[INFO] TPS stable: 19.9',c:'info'},
+]
+let mi=0
+setInterval(()=>{
+  if(serverOn){
+    addConsole(consoleMessages[mi%consoleMessages.length].t, consoleMessages[mi%consoleMessages.length].c)
+    mi++
+  }
+},8000)
+
+// COUNTER ANIMATION
+function animCount(el,target){
+  let cur=0;const step=Math.ceil(target/60)
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur.toLocaleString();if(cur>=target)clearInterval(t)},20)
+}
+setTimeout(()=>{
+  const s=document.getElementById('counter-servers')
+  const p=document.getElementById('counter-players')
+  if(s)animCount(s,48293)
+  if(p)animCount(p,12847)
+},500)
+
+// PLAYERS COUNT UPDATE
+setInterval(()=>{
+  const p=document.getElementById('players-val')
+  if(p){const n=Math.floor(3+Math.random()*3);p.textContent=n+'/20'}
+},5000)
+</script>
+</body>
+</html>
